@@ -89,7 +89,7 @@ HTML.initI18n =function(){
 	document.getElementById("__op_search_tip3").innerText=chrome.i18n.getMessage("op_search_tip3");
 	document.getElementById("__op_search_cancel").innerText=chrome.i18n.getMessage("op_search_cancel");
 	document.getElementById("__op_search_tip4").innerText=chrome.i18n.getMessage("op_search_tip4");
-	
+
 	i18n.__op_search_addcm =chrome.i18n.getMessage("op_search_addcm");
 	i18n.__op_search_edit =chrome.i18n.getMessage("op_search_edit");
 	i18n.__op_search_rm =chrome.i18n.getMessage("op_search_rm");
@@ -98,7 +98,7 @@ HTML.initI18n =function(){
 	i18n.__op_search_add =chrome.i18n.getMessage("op_search_add");
 	i18n.__op_search_cancel =chrome.i18n.getMessage("op_search_cancel");
 	i18n.__op_search_confirm =chrome.i18n.getMessage("op_search_confirm");
-	
+
 	i18n.__op_tip_fom_url =chrome.i18n.getMessage("op_tip_fom_url");
 	i18n.__op_tip_fom_name =chrome.i18n.getMessage("op_tip_fom_name");
 	i18n.__op_tip_fom_icon =chrome.i18n.getMessage("op_tip_fom_icon");
@@ -107,7 +107,7 @@ HTML.initI18n =function(){
 	i18n.__op_tip_fom_pathkw =chrome.i18n.getMessage("op_tip_fom_pathkw");
 	i18n.__op_tip_save_success =chrome.i18n.getMessage("op_tip_save_success");
 	i18n.__op_tip_notallow =chrome.i18n.getMessage("op_tip_notallow");
-	
+
 	i18n.__op_mtip_pos_right =chrome.i18n.getMessage("op_mtip_pos_right");
 	i18n.__op_mtip_display_auto =chrome.i18n.getMessage("op_mtip_display_auto");
 	i18n.__op_mtip_right_indentdistance =chrome.i18n.getMessage("op_mtip_right_indentdistance");
@@ -121,7 +121,7 @@ HTML.initI18n =function(){
 	i18n.__op_mtip_form_enc =chrome.i18n.getMessage("op_mtip_form_enc");
 	i18n.__op_mtip_form_googleico =chrome.i18n.getMessage("op_mtip_form_googleico");
 	i18n.__op_mtip_form_pathkw =chrome.i18n.getMessage("op_mtip_form_pathkw");
-	
+
 	document.getElementById("__oth_readme").innerText=chrome.i18n.getMessage("oth_readme");
 	document.getElementById("__oth_readme1").innerText=chrome.i18n.getMessage("oth_readme1");
 	document.getElementById("__oth_readme2").innerText=chrome.i18n.getMessage("oth_readme2");
@@ -137,7 +137,7 @@ HTML.initI18n =function(){
 	i18n.__oth_tab_rm_confirm =chrome.i18n.getMessage("oth_tab_rm_confirm");
 	i18n.__op_import_success =chrome.i18n.getMessage("op_import_success");
 	i18n.__op_import_failed =chrome.i18n.getMessage("op_import_failed");
-	
+
 };
 
 HTML.initEncList =function() {
@@ -159,28 +159,28 @@ HTML.initPageData =function(){
 			var favlist =storages.search2_favlist;
 			iconurls =storages.search2_iconurls;
 			icondatas =storages.search2_icondatas;
-			
+
 			if(!config) config =IDATA.search2_config;
 			if(!favtypes) favtypes =IDATA.search2_favtypes;
 			if(!favlist) favlist =IDATA.search2_favlist;
 			if(!iconurls) iconurls =IDATA.search2_iconurls;
 			if(!icondatas) icondatas =IDATA.search2_icondatas;
-			
+
 			mnw =config.morenewwindow;
 			mac =config.moreautoclose;
 			cm =config.cmenu;
 			favlist.sort(UTIL.searchListComperator);
-			
+
 			HTML.initIcon();
 			HTML.initConfig(config);
-			
+
 			HTML.injectSearchTab(favtypes);
-			
+
 			for(i=0; i<favlist.length; i++){
 				HTML.injectSearchList(favlist[i]);
 				//UTIL.getFavicon(favlist[i].url1, favlist[i].icon);
 			}
-			
+
 			//if (iconflush) chrome.storage.local.set({search2_icondatas : icondatas});
 			document.getElementById("search_category_tab").firstChild.onmousedown();
 		}
@@ -201,7 +201,7 @@ HTML.injectSearchTab =function(favtypes) {
 		input.disabled =true;
 		input.value =v;
 		xdiv.innerText ="x";
-		
+
 		li.onmousedown =HTML.searchTabSelected;
 		li.ondblclick =function() {
 			var input =this.firstChild;
@@ -210,13 +210,13 @@ HTML.injectSearchTab =function(favtypes) {
 			input.disabled =!input.disabled;
 			input.focus();
 		};
-		
+
 		input.onblur =function() {
 			if(this.value.trim()=="") this.value =this.getAttribute("oname");
 			this.style.color ="";
 			this.disabled =true;
 		};
-		
+
 		xdiv.onclick =function() {
 			if (document.getElementById("search_att").getAttribute("locked")) return;
 			if (!confirm(i18n.__oth_tab_rm_confirm)) return;
@@ -224,13 +224,13 @@ HTML.injectSearchTab =function(favtypes) {
 			var searchlist =document.getElementById(searchtab.getAttribute("target"));
 			searchtab.parentNode.removeChild(searchtab);
 			if(searchlist) searchlist.parentNode.removeChild(searchlist);
-			
+
 			var firsttab =document.getElementById("search_category_tab").firstChild;
 			if (firsttab.onmousedown) firsttab.onmousedown();
 		}
 		return li;
 	};
-	
+
 	var tabcnt =0;
 	//add category
 	var addli =tab.appendChild(document.createElement("li"));
@@ -241,24 +241,24 @@ HTML.injectSearchTab =function(favtypes) {
 	addlabel.id ="search_category_add_label";
 	addlabel.className ="addlabe";
 	addlabel.innerText ="+";
-	
+
 	addli.onclick =function() {
 		if (document.getElementById("search_att").getAttribute("locked")) return;
 		addtab(tabcnt, i18n.__oth_tab_untitled).onmousedown();
 		HTML.injectSearchList({type:tabcnt});
 		tabcnt++;
 	};
-	
+
 	for (tp in favtypes) {
 		addtab(tp, favtypes[tp]);
 		tabcnt++;
 	}
-	
+
 };
 
 HTML.injectSearchList =function(json){
 	var type =json.type;
-	
+
 	var listdiv =document.getElementById("search_list");
 	var div =document.getElementById("search_list_" +type);
 	if (!div) {
@@ -276,7 +276,7 @@ HTML.injectSearchList =function(json){
 	/*for 1.0.7-->1.0.8*/
 	if (! json.cm) json.cm=0;
 	if (! json.enc) json.enc="";
-	
+
 	var li =document.createElement("li");
 	var img =document.createElement("img");
 	var inputName =document.createElement("input");
@@ -284,14 +284,14 @@ HTML.injectSearchList =function(json){
 	var addcm =document.createElement("div");
 	var cmCheckbox =document.createElement("input");
 	var cmLabel =document.createElement("label");
-	
+
 	var span =document.createElement("span");
 	var op_rm =document.createElement("label");
 	var op_edit =document.createElement("label");
 	var op_onoff =document.createElement("label");
 	var op_down =document.createElement("img");
 	var op_up =document.createElement("img");
-	
+
 	for(var name in json) li.setAttribute(name, json[name]);
 	var iconurl =iconurls[json.icon];
 	var icondata =icondatas[json.icon];
@@ -310,7 +310,7 @@ HTML.injectSearchList =function(json){
 	inputHost.size ="45";
 	addcm.appendChild(cmCheckbox);
 	addcm.appendChild(cmLabel);
-	
+
 	op_rm.innerHTML =i18n.__op_search_rm;
 	op_edit.innerHTML =i18n.__op_search_edit;
 	op_onoff.innerHTML =(json.on==1)?i18n.__op_search_off : i18n.__op_search_on;
@@ -321,7 +321,7 @@ HTML.injectSearchList =function(json){
 	span.appendChild(op_onoff);
 	span.appendChild(op_down);
 	span.appendChild(op_up);
-	
+
 	li.appendChild(img);
 	li.appendChild(inputName);
 	li.appendChild(inputHost);
@@ -329,7 +329,7 @@ HTML.injectSearchList =function(json){
 	li.appendChild(span);
 	ul.appendChild(li);
 	for(var node in span.children) span.children[node].className ="searchListOp";
-	
+
 	inputName.onblur =function(){this.style.border ="0";this.disabled ="disabled";};
 	inputHost.onblur =function(){this.style.border ="0";this.disabled ="disabled";};
 	li.onclick =HTML.searchListSelected;
@@ -339,7 +339,7 @@ HTML.injectSearchList =function(json){
 	op_onoff.onclick =HTML.searchListOnoff;
 	op_down.onclick =HTML.searchListDown;
 	op_up.onclick =HTML.searchListUp;
-		
+
 	return li;
 };
 
@@ -351,17 +351,17 @@ HTML.searchTabSelected =function(){
 	search_att.setAttribute("listname", target);
 	this.style.backgroundColor ="#bcd2e6";
 	var lists =this.parentNode.children;
-	
+
 	for (var i =0; i<lists.length; i++) {
 		if (lists[i]!=this) lists[i].style.backgroundColor ="";
 	}
-	
+
 	var searchListItems =document.getElementById("search_list").childNodes;
 	for(var k=0; k<searchListItems.length; k++){
 		var searchItem =searchListItems[k];
 		searchItem.id==target?(searchItem.style.setProperty("display","block")):(searchItem.style.setProperty("display","none"));
 	}
-		
+
 };
 
 HTML.searchListSelected =function(){
@@ -371,7 +371,7 @@ HTML.searchListSelected =function(){
 	for (var i =0; i<lists.length; i++) {
 		if (lists[i]!=this) lists[i].style.backgroundColor ="";
 	}
-	
+
 	var  att_url =document.getElementById("att_url");
 	var  att_name =document.getElementById("att_name");
 	var  att_icon =document.getElementById("att_icon");
@@ -380,7 +380,7 @@ HTML.searchListSelected =function(){
 	var  att_enc_option =document.getElementById(this.getAttribute("enc"));
 	var  googleico =document.getElementById("googleico");
 	var  pathkw =document.getElementById("pathkw");
-	
+
 	var url =this.getAttribute("url");
 	att_url.value =url;
 	att_name.value =this.getAttribute("name");
@@ -393,12 +393,12 @@ HTML.searchListSelected =function(){
 	document.getElementById("att_enc").style.color ="#4C4C4C";
 	googleico.checked =(url.indexOf("http://www.google.com/s2/favicons?domain=")>-1);
 	pathkw.checked =(prkw.substr(-1) !="=");
-	
+
 };
 
 HTML.searchListAcm =function() {
 	this.parentNode.parentNode.setAttribute("cm", this.checked?1:0);
-	
+
 };
 
 HTML.searchListUp =function(){
@@ -450,7 +450,7 @@ HTML.searchListRm =function(){
 	var icon =curLi.getAttribute("icon");
 	curLi.onclick =null;
 	curLi.parentNode.removeChild(curLi);
-	
+
 	var used, lists =document.getElementById("search_list").getElementsByTagName("li");
 	for(var i=0; i<lists.length; i++) {
 		if(lists[i].getAttribute("icon") ==icon) {
@@ -483,8 +483,9 @@ HTML.searchListAdd =function(){
 		if(search_att.getAttribute("locked")) return;
 		e.parentNode.parentNode.click();
 		e.innerHTML =i18n.__op_search_confirm;
-		e.style.color ="red";
-		e.style.backgroundColor ="blue";
+		e.style.color ="white";
+		e.style.backgroundColor ="#E76F51";
+		e.className = "icofont-ui-check";
 		HTML.searchAttEditable("y");
 	}
 	else {
@@ -521,7 +522,7 @@ HTML.searchListConfirm =function(type, e) {
 		HTML.showTip(i18n.__op_tip_fom_pathkw);
 		return;
 	}
-	
+
 	//build json data
 	var  json ={};
 	json.on =1;
@@ -533,15 +534,15 @@ HTML.searchListConfirm =function(type, e) {
 	json.enc =att_enc;
 	json.host =att_url.split("/")[2];
 	json.icon =json.host.replace(/\./g, "_");
-	
+
 	var foricon =document.getElementById("foricon");
 	var img =foricon.appendChild(document.createElement("img"));
 	json.iconurl =iconurls[json.icon] =img.src =att_icon;
-	
+
 	/*if get icon timeout*/
 	iconloaded =false;
 	icoevt =setTimeout("if(!iconloaded) {HTML.showTip(i18n.__op_tip_fom_icon_timeout, 4000);foricon.innerHTML='';}clearTimeout(icoevt);", 5000);
-	
+
 	img.onload =function() {
 		iconloaded =true;
 		var li, icondata =icondatas[json.icon] =UTIL.getFavicon(img);
@@ -554,14 +555,15 @@ HTML.searchListConfirm =function(type, e) {
 			e.id ="";
 			e.innerHTML =i18n.__op_search_edit;
 			e.style.color ="#388F73";
-			
+
 		}
 		else if (type=="add") {
 			li =HTML.injectSearchList(json);
 			e.innerHTML =i18n.__op_search_add;
-			e.style.color ="#FFA500";
+			e.style.color ="white";
 		}
-		e.style.backgroundColor ="";
+		e.className = "icofont-ui-add";
+		e.style.backgroundColor ="#277DA1";
 		HTML.searchAttEditable("n");
 		if (type=="edit") li.click();
 		foricon.innerHTML ="";
@@ -621,7 +623,7 @@ HTML.initClickEvent =function(){
 	var fgcolor =document.getElementById("fgcolor");
 	var bdcolor_div =document.getElementById("bdcolor_div");
 	var bdcolor =document.getElementById("bdcolor");
-	
+
 	var addsearch =document.getElementById("__op_search_add");
 	var cancelop =document.getElementById("__op_search_cancel");
 	var googleico =document.getElementById("googleico");
@@ -640,7 +642,7 @@ HTML.initClickEvent =function(){
 	var borderline_tip =document.getElementById("borderline_tip");
 	var colorpane =document.getElementById("colorpane");
 	var colorpane_close =document.getElementById("colorpane_close");
-		
+
 	resetbtn.onclick =HTML.resetOption;
 	importbtn.onclick =HTML.importOption;
 	exportbtn.onclick =HTML.exportOption;
@@ -650,7 +652,7 @@ HTML.initClickEvent =function(){
 	bgcolor_div.onclick =fgcolor_div.onclick =bdcolor_div.onclick =function(){HTML.showColorPane(this)};
 	bgcolor.ondblclick =fgcolor.ondblclick =bdcolor.ondblclick =function(){HTML.colorInputOnDblck(this)};
 	bgcolor.onblur =fgcolor.onblur =bdcolor.onblur =function(){HTML.colorInputOnblur(this)};
-	
+
 	searchlisttiled.onclick =HTML.searchListtiled;
 	for (var i=0; i<searchpositions.length; i++) searchpositions[i].onclick =HTML.searchPositionRight;
 	right_indentdistance.onkeyup =function(){UTIL.onlyNumInput(this, 5, 50)};
@@ -673,7 +675,7 @@ HTML.initClickEvent =function(){
 	googleico_tip.onclick =function(){HTML.showMiniTip(this,i18n.__op_mtip_form_googleico,8000)};
 	pathkw_tip.onclick =function(){HTML.showMiniTip(this,i18n.__op_mtip_form_pathkw,8000)};
 	colorpane.onblur =colorpane_close.onclick =HTML.closeColorPane;
-	
+
 	var colortable =document.getElementById('colortable').getElementsByTagName("td");
 	for(var i=0;i<colortable.length;i++) colortable[i].onclick =function(){HTML.changeColor(this.style.background)};
 };
@@ -718,20 +720,20 @@ HTML.saveOption =function(){
 		HTML.showTip(i18n.__op_tip_notallow);
 		return;
 	}
-	
+
 	var config =HTML.getConfig();
-	
+
 	var searchTabUl =document.getElementById("search_category_tab");
 	var searchTabs =searchTabUl.getElementsByTagName("li");
 	var favtypes ={};
 	for(var i=0; i<searchTabs.length-1; i++) {
 		favtypes[parseInt(searchTabs[i].getAttribute("ctype"))] =searchTabs[i].firstChild.value;
 	}
-		
+
 	var searchListDiv =document.getElementById("search_list");
 	var searchList =searchListDiv.getElementsByTagName("li");
 	var favlist =[], nohslist =[];
-	
+
 	for(var i=0; i<searchList.length; i++){
 		var listItem =searchList[i];
 		var fields =listItem.attributes;
@@ -739,7 +741,7 @@ HTML.saveOption =function(){
 		for(var k=0; k<fields.length; k++){
 			var key =fields[k].name;
 			var value =fields[k].value;
-			if (key=="on" || key=="type" || key=="cm" || key=="name" || key=="host" || key=="icon" || key=="enc" || key=="prkw" || key=="urltf" || key=="url") 
+			if (key=="on" || key=="type" || key=="cm" || key=="name" || key=="host" || key=="icon" || key=="enc" || key=="prkw" || key=="urltf" || key=="url")
 				json[key] =value;
 			if(key=="prkw" && value.substr(-1) !="=") nohslist.push(listItem.getAttribute("host"));
 			json.sno =i+1;
@@ -752,7 +754,7 @@ HTML.saveOption =function(){
 	//console.log(favtypes);
 	//console.log(favlist);
 	//console.log(nohslist);
-	
+
 	chrome.storage.local.set(
 		{
 			search2_config : config,
@@ -763,10 +765,10 @@ HTML.saveOption =function(){
 			search2_nohslist : nohslist
 		}
 	);
-	
+
 	if (!config.cmenu) chrome.contextMenus.removeAll();
 	else chrome.extension.sendMessage({action: "search2createcm"});
-		
+
 	HTML.showTip(i18n.__op_tip_save_success);
 };
 
@@ -783,15 +785,15 @@ HTML.initConfig =function(config) {
 	document.getElementById("bgcolor_div").style.background =document.getElementById("bgcolor").value =config.bgcolor.toUpperCase();
 	document.getElementById("fgcolor_div").style.background =document.getElementById("fgcolor").value =config.fgcolor.toUpperCase();
 	document.getElementById("bdcolor_div").style.background =document.getElementById("bdcolor").value =config.bdcolor.toUpperCase();
-	
+
 	var intervaldistance =document.getElementById("intervaldistance");
 	intervaldistance.value =config.intervaldistance;
 	intervaldistance.disabled =config.searchlisttiled;
-	
+
 	var right_indentdistance =document.getElementById("right_indentdistance");
 	right_indentdistance.value =config.rightindentdistance?config.rightindentdistance:5;
 	right_indentdistance.disabled =!(config.searchposition=="right");
-	
+
 	var searchposition =document.getElementsByName("searchposition");
 	var searchnamedisplay =document.getElementsByName("searchnamedisplay");
 	for (var i=0; i<searchposition.length; i++) if (config.searchposition==searchposition[i].value) searchposition[i].checked =true;
@@ -811,7 +813,7 @@ HTML.getConfig =function() {
 	config.indentdistance =document.getElementById("indentdistance").value +"";
 	config.intervaldistance =document.getElementById("intervaldistance").value +"";
 	config.borderline =document.getElementById("borderline").checked ? 1 : 0;
-	
+
 	config.bgcolor =HTML.getInputColor(document.getElementById("bgcolor"));
 	config.fgcolor =HTML.getInputColor(document.getElementById("fgcolor"));
 	config.bdcolor =HTML.getInputColor(document.getElementById("bdcolor"));
@@ -850,14 +852,14 @@ HTML.cancelOp =function() {
 		current_edit.id ="";
 	}
 	var addsearch =document.getElementById("__op_search_add");
-	if (addsearch.innerHTML !=i18n.__op_search_add)  
+	if (addsearch.innerHTML !=i18n.__op_search_add)
 	{
 		addsearch.innerHTML =i18n.__op_search_add;
-		addsearch.style.color ="#FFA500";
-		addsearch.style.backgroundColor ="";
+		addsearch.style.backgroundColor ="#277DA1";
+		addsearch.className = "icofont-ui-add";
 	}
 	HTML.searchAttEditable("c");
-	
+
 };
 
 HTML.googleIco =function() {
@@ -1000,7 +1002,7 @@ HTML.initColorPane =function(){
 	      colorTable=colorTable+'<td width="12" style="cursor:pointer;background:#'+SpColorHex[j]+'">';
 	    }
 	    colorTable=colorTable+'<td width="12" style="background:#000000">';
-	    for (k=0;k<3;k++){ 
+	    for (k=0;k<3;k++){
         for (l=0;l<6;l++){
           colorTable=colorTable+'<td width="12" style="cursor:pointer;background:#'+ColorHex[k+i*3]+ColorHex[l]+ColorHex[j]+'">';
         }

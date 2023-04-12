@@ -27,13 +27,13 @@ window.onload =function(){
 		{action: "getkw"},
 		function(response){
 			var kw =response.utfkw;
-			
+
 		}
 	);
 	**/
 			var kw =document.location.search.substr(4);
 			if(!kw) kw ="";
-			
+
 			Array.prototype.containOf =function(e){
 				if(this.constructor!=Array) return;
 				for(var i =0; i<this.length; i++) if(e ==this[i]) return true;
@@ -43,25 +43,25 @@ window.onload =function(){
 			var searchInput =document.getElementById("search2_more_searchInput");
 			searchInput.value=decodeURIComponent(kw);
 			initI18n();
-			
+
 			chrome.storage.local.get(
 				function(storages){
 					var favtypes =storages.search2_favtypes;
 					var favlist =storages.search2_favlist;
 					var icondatas =storages.search2_icondatas;
 					var nohslist =storages.search2_nohslist;
-					
+
 					if(!favtypes) favtypes =IDATA.search2_favtypes;
 					if(!favlist) favlist =IDATA.search2_favlist;
 					if(!icondatas) icondatas =IDATA.search2_icondatas;
 					if(!nohslist) nohslist =IDATA.search2_nohslist;
-					
+
 					/*config */
 					chrome.extension.sendRequest(
 						{action: "xCorlorBox"},
 						function(rep) {console.log(rep.overlay);}
 					);
-					
+
 					var morelist =document.getElementById("search2_more_morelist");
 					var trs =[];
 					//tr
@@ -80,7 +80,7 @@ window.onload =function(){
 						searchItemImg.src =icondatas[favlist[i].icon];
 						searchItemText =searchItem.appendChild(document.createElement("span"));
 						searchItemText.innerText =favlist[i].name;
-						
+
 						td.onclick=function(){
 							var target =document.getElementById("search2_more_newwindow").checked ? "_blank" : "_top";
 							var utfkeywords =encodeURIComponent(searchInput.value);
@@ -94,7 +94,7 @@ window.onload =function(){
 							window.open(url,target);
 						};
 					}
-					
+
 				}
 			);
 
