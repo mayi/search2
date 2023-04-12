@@ -167,7 +167,7 @@ IDATA.search2_favlist =[
 	,{on:1, type:0, sno:2, cm:0, name:'360新闻', icon:'news_so_com', enc:'', prkw:'q=', host:'news.so.com', urltf:'', url:'http://news.so.com/ns?ie=utf-8&q=%s'}
 	,{on:1, type:1, sno:2, cm:0, name:'360网页', icon:'www_so_com', enc:'', prkw:'q=', host:'www.so.com', urltf:'', url:'https://www.so.com/s?ie=utf-8&q=%s'}
 	,{on:1, type:2, sno:2, cm:0, name:'360图片', icon:'image_so_com', enc:'', prkw:'q=', host:'image.so.com', urltf:'', url:'http://image.so.com/i?ie=utf-8&q=%s'}
-	,{on:1, type:3, sno:1, cm:0, name:'360视频', icon:'video_so_com', enc:'', prkw:'kw=', host:'video.so.com', urltf:'', url:'http://video.so.com/v?ie=utf-8&kw=%s'}		
+	,{on:1, type:3, sno:1, cm:0, name:'360视频', icon:'video_so_com', enc:'', prkw:'kw=', host:'video.so.com', urltf:'', url:'http://video.so.com/v?ie=utf-8&kw=%s'}
 	,{on:1, type:3, sno:2, cm:0, name:'Youtube', icon:'www_youtube_com', enc:'', prkw:'search_query=', host:'www.youtube.com', urltf:'www.youtube.com/results', url:'https://www.youtube.com/results?search_query=%s'}
 
 	,{on:1, type:0, sno:3, cm:0, name:'搜狗新闻', icon:'news_sogou_com', enc:'', prkw:'query=', host:'news.sogou.com', urltf:'', url:'http://news.sogou.com/news?ie=utf8&query=%s'}
@@ -216,7 +216,7 @@ IDATA.search2_favlist =[
 	,{on:1, type:3, sno:9, cm:0, name:'迅雷看看', icon:'search_kankan_com', enc:'', prkw:'keyword=', host:'search.kankan.com', urltf:'', url:'http://search.kankan.com/search.php?keyword=%s'}
 	,{on:0, type:3, sno:10, cm:0, name:'搜狐视频', icon:'so_tv_sohu_com', enc:'', prkw:'wd=', host:'so.tv.sohu.com', urltf:'', url:'http://so.tv.sohu.com/mts?box=1&wd=%s'}
 	,{on:0, type:3, sno:11,cm:0, name:'酷6网', icon:'so_ku6_com', enc:'', prkw:'q=', host:'so.ku6.com', urltf:'', url:'http://so.ku6.com/search/?q=%s'}
-	
+
 	,{on:1, type:2, sno:8, cm:1, name:'谷歌右键图片', icon:'www_google_com', enc:'', prkw:'image_url=', host:'www.google.com', urltf:'', url:'https://www.google.com/searchbyimage?image_url=%p'}
 	,{on:1, type:2, sno:9, cm:1, name:'百度右键图片', icon:'image_baidu_com', enc:'', prkw:'queryImageUrl=', host:'image.baidu.com', urltf:'', url:'http://image.baidu.com/n/pc_search?queryImageUrl=%p'}
 	,{on:1, type:2, sno:10, cm:0, name:'搜狗右键图片', icon:'pic_sogou_com', enc:'', prkw:'query=', host:'pic.sogou.com', urltf:'', url:'http://pic.sogou.com/ris?query=%p'}
