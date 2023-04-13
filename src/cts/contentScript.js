@@ -79,12 +79,15 @@ CTS.init = function () {
     septr = "/";
     const href = thisUrl;
     hashSearch = href.substr(href.indexOf("://") + 3);
-    if (urltf != ".")
+    if (urltf != ".") {
       hashSearch = hashSearch.replace(/\%25(26|2B|2d|2E)/g, "%$1");
+    }
     hashSearch = hashSearch.replace(/\+/g, " ");
     CTS.getKeywords(hashSearch, septr);
-  } else septr = "&";
-  //console.log("urltf=" + urltf + " prkw=" + prkw + " septr=" + septr + " kws=" + keywords + " hs=" + hashSearch);
+  } else {
+    septr = "&";
+  }
+  console.log("urltf=" + urltf + " prkw=" + prkw + " septr=" + septr + " kws=" + keywords + " hs=" + hashSearch);
   /*location hash | search*/
   if (!keywords) {
     hashSearch = document.location.search.slice(1);
@@ -96,7 +99,6 @@ CTS.init = function () {
     hashSearch = hashSearch.replace(/\+/g, " ");
     CTS.getKeywords(hashSearch, septr);
   }
-
   /*hash change listener ,but while history.pushState was invoked use ajax in HTML5, it will donot work*/
   /*
 	window.addEventListener('hashchange', function () {
@@ -717,20 +719,32 @@ CTS.tunePos = function () {
 };
 
 CTS.getKeywords =function(hashSearch, septr){
-	if("&"==septr) {
-		var params = hashSearch.split(septr);
-		for (var k = 0; k < params.length; k++) {
-			if (params[k].indexOf(prkw) == 0) {
-				keywords =params[k].substring(prkw.length);
-				break;
-			}
-		}
-	}
-	else if("/"==septr){
-		if(hashSearch.indexOf('search.suning.com') >=0) keywords =hashSearch.split(prkw)[1].split("/")[1].split("?")[0].split("#")[0];
-        else if(hashSearch.indexOf('so.iqiyi.com') >=0) keywords =hashSearch.split(prkw)[1].split("?")[0];
-        else keywords =hashSearch.split(prkw)[1].split("/")[1];
-	}
+	if ("&" == septr) {
+    const params = hashSearch.split(septr);
+    for (const element of params) {
+      if (element.indexOf(prkw) == 0) {
+        keywords = element.substring(prkw.length);
+        break;
+      }
+    }
+  } else if ("/" == septr) {
+    if (hashSearch.indexOf("search.suning.com") >= 0) {
+      keywords = hashSearch
+        .split(prkw)[1]
+        .split("/")[1]
+        .split("?")[0]
+        .split("#")[0];
+    } else if (hashSearch.indexOf("so.iqiyi.com") >= 0) {
+      keywords = hashSearch.split(prkw)[1].split("?")[0];
+    } else {
+      const arr = hashSearch.split(prkw);
+      if (arr.length > 1) {
+        keywords = arr[1].split("/")[1];
+      } else {
+        keywords = hashSearch.substring(prkw.length);
+      }
+    }
+  }
 };
 
 CTS.clickAslink =function(){
