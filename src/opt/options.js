@@ -769,7 +769,7 @@ HTML.saveOption =function(){
 	if (!config.cmenu) {
 		chrome.contextMenus.removeAll();
 	} else {
-		chrome.extension.sendMessage({action: "search2createcm"});
+		chrome.runtime.sendMessage({action: "search2createcm"});
 	}
 	HTML.showTip(i18n.__op_tip_save_success);
 };
