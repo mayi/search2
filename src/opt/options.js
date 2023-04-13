@@ -524,7 +524,7 @@ HTML.searchListConfirm =function(type, e) {
 	}
 
 	//build json data
-	var  json ={};
+	var json ={};
 	json.on =1;
 	json.type =parseInt(search_att.getAttribute("ctype"));
 	json.name =att_name;
@@ -541,7 +541,13 @@ HTML.searchListConfirm =function(type, e) {
 
 	/*if get icon timeout*/
 	iconloaded =false;
-	icoevt =setTimeout("if(!iconloaded) {HTML.showTip(i18n.__op_tip_fom_icon_timeout, 4000);foricon.innerHTML='';}clearTimeout(icoevt);", 5000);
+  const icoevt = setTimeout(() => {
+    if (!iconloaded) {
+      HTML.showTip(i18n.__op_tip_fom_icon_timeout, 4000);
+      foricon.innerHTML = "";
+    }
+    clearTimeout(icoevt);
+  }, 5000);
 
 	img.onload =function() {
 		iconloaded =true;

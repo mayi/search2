@@ -45,70 +45,73 @@ CTS.initI18n =function(){
 
 };
 
-CTS.init =function(){
-	var thisurl = document.location.href;
-	var hostname = document.location.host;
-	for (i = 0; i < favlist.length; i++) {
-		if (favlist[i].on != 1 || favlist[i].url.indexOf("%s")==-1) continue;
-		if( (hostname.indexOf(favlist[i].host) != -1) &&
-			(
-				(!favlist[i].urltf) ||
-				(favlist[i].urltf && (thisurl.indexOf(favlist[i].urltf) !=-1)) ||
-				(favlist[i].urltf=='&tbm=web' && (thisurl.indexOf('&tbm=') ==-1))
-			)
-		){
-			favindex = i;
-			urltf =favlist[i].urltf;
-			prkw =favlist[i].prkw;
-			stype =favlist[i].type;
-			break;
-		}
-	}
+CTS.init = function () {
+  const thisUrl = document.location.href;
+  const hostname = document.location.host;
+  for (let i = 0; i < favlist.length; i++) {
+    if (favlist[i].on != 1 || favlist[i].url.indexOf("%s") == -1) {
+      continue;
+    }
+    if (
+      hostname.indexOf(favlist[i].host) != -1 &&
+      (!favlist[i].urltf ||
+        (favlist[i].urltf && thisUrl.indexOf(favlist[i].urltf) != -1) ||
+        (favlist[i].urltf == "&tbm=web" && thisUrl.indexOf("&tbm=") == -1))
+    ) {
+      favindex = i;
+      urltf = favlist[i].urltf;
+      prkw = favlist[i].prkw;
+      stype = favlist[i].type;
+      break;
+    }
+  }
 
-	/*transfer link?*/
-	if (thisurl.indexOf("/link?")!=-1) return;
-	if (!prkw) return;
+  /*transfer link?*/
+  if (thisUrl.indexOf("/link?") != -1) {
+    return;
+  }
+  if (!prkw) {
+    return;
+  }
 
-	/*action for keywords*/
-	if (nohslist.containOf(hostname)) {
-		septr ="/";
-		var href =thisurl;
-		hashSearch =href.substr(href.indexOf("://")+3);
-		if (urltf!=".") hashSearch =hashSearch.replace(/\%25(26|2B|2d|2E)/g, "%$1");
-		hashSearch =hashSearch.replace(/\+/g, " ");
-		CTS.getKeywords(hashSearch, septr);
-	}
-	else septr ="&";
-    //console.log("urltf=" + urltf + " prkw=" + prkw + " septr=" + septr + " kws=" + keywords + " hs=" + hashSearch);
-	/*location hash | search*/
-	if (!keywords) {
-		hashSearch =document.location.search.slice(1);
-		hashSearch =hashSearch.replace(/\+/g, " ");
-		CTS.getKeywords(hashSearch, septr);
-	}
-	if (!keywords) {
-		hashSearch =document.location.hash.slice(1);
-		hashSearch =hashSearch.replace(/\+/g, " ");
-		CTS.getKeywords(hashSearch, septr);
-	}
+  /*action for keywords*/
+  if (nohslist.containOf(hostname)) {
+    septr = "/";
+    const href = thisUrl;
+    hashSearch = href.substr(href.indexOf("://") + 3);
+    if (urltf != ".")
+      hashSearch = hashSearch.replace(/\%25(26|2B|2d|2E)/g, "%$1");
+    hashSearch = hashSearch.replace(/\+/g, " ");
+    CTS.getKeywords(hashSearch, septr);
+  } else septr = "&";
+  //console.log("urltf=" + urltf + " prkw=" + prkw + " septr=" + septr + " kws=" + keywords + " hs=" + hashSearch);
+  /*location hash | search*/
+  if (!keywords) {
+    hashSearch = document.location.search.slice(1);
+    hashSearch = hashSearch.replace(/\+/g, " ");
+    CTS.getKeywords(hashSearch, septr);
+  }
+  if (!keywords) {
+    hashSearch = document.location.hash.slice(1);
+    hashSearch = hashSearch.replace(/\+/g, " ");
+    CTS.getKeywords(hashSearch, septr);
+  }
 
-	/*hash change listener ,but while history.pushState was invoked use ajax in HTML5, it will donot work*/
-	/*
+  /*hash change listener ,but while history.pushState was invoked use ajax in HTML5, it will donot work*/
+  /*
 	window.addEventListener('hashchange', function () {
 		CTS.runUrlChange();
 	}, false);
 	*/
-	var url1 =thisurl, url2;
-	setInterval(
-		function(){
-			url2 =document.location.href;
-			if (url1!=url2) {
-				url1 =url2;
-				CTS.runUrlChange();
-			}
-		},100
-	);
-
+  let url1 = thisUrl,
+    url2;
+  setInterval(function () {
+    url2 = document.location.href;
+    if (url1 != url2) {
+      url1 = url2;
+      CTS.runUrlChange();
+    }
+  }, 100);
 };
 
 CTS.ready =function(start){
@@ -156,29 +159,45 @@ CTS.start =function(){
 	}
 };
 
-CTS.createBar =function(bgc){
-	var ah =config.autohide;
-	var bdc =config.bdcolor;
-	var bl =config.borderline;
-	var rret =config.rightindentdistance;
-	var marginpx ="-" +(whmargin-2) +"px";
+CTS.createBar = function (bgc) {
+  const ah = config.autohide;
+  const bdc = config.bdcolor;
+  const bl = config.borderline;
+  const rret = config.rightindentdistance;
+  const marginpx = "-" + (whmargin - 2) + "px";
 
-	var bar =document.createElement("div");
-	document.documentElement.insertBefore(bar,document.head);
-	bar.id ="search2";
-	bar.className ="search2Skin search2_At" +pos +(ah && pos !="RIGHT" ? " search2AutoHide_At" +pos : "");
-	var barstyle ="display:none;background:" +bgc +" !important;";
+  const bar = document.createElement("div");
+  document.documentElement.insertBefore(bar, document.head);
+  bar.id = "search2";
+  bar.className =
+    "search2Skin search2_At" +
+    pos +
+    (ah && pos != "RIGHT" ? " search2AutoHide_At" + pos : "");
+  let barstyle = "display:none;background:" + bgc + " !important;";
 
-	if(pos=="left") barstyle +=(bl ? "border-right:1px solid " +bdc +" !important;" : "") +(ah ? "left:" +marginpx : "");
-	else if(pos=="top") barstyle +=(bl ? "border-bottom:1px solid " +bdc +" !important;" : "") +(ah ? "top:" +marginpx : "");
-	else if(pos=="bottom") barstyle +=(bl ? "border-top:1px solid " +bdc +" !important;" : "") +(ah ? "bottom:" +marginpx : "");
-	else if(pos=="right") barstyle +=bl ? "border:1px solid " +bdc +" !important;" : "";
+  if (pos == "left") {
+    barstyle +=
+      (bl ? "border-right:1px solid " + bdc + " !important;" : "") +
+      (ah ? "left:" + marginpx : "");
+  } else if (pos == "top") {
+    barstyle +=
+      (bl ? "border-bottom:1px solid " + bdc + " !important;" : "") +
+      (ah ? "top:" + marginpx : "");
+  } else if (pos == "bottom") {
+    barstyle +=
+      (bl ? "border-top:1px solid " + bdc + " !important;" : "") +
+      (ah ? "bottom:" + marginpx : "");
+  } else if (pos == "right") {
+    barstyle += bl ? "border:1px solid " + bdc + " !important;" : "";
+  }
+  bar.setAttribute("style", barstyle);
+  if (pos == "left") {
+    bar.style.width = whmargin + "px";
+  } else if (pos == "right") {
+    bar.style.right = rret + "%";
+  }
 
-	bar.setAttribute("style",barstyle);
-	if (pos=="left") bar.style.width =whmargin +"px";
-	else if (pos=="right") bar.style.right=rret + "%";
-
-	return bar;
+  return bar;
 };
 
 CTS.createPullmenu =function(bgc,fgc) {
@@ -229,7 +248,7 @@ CTS.createConfigbtn =function(td){
 
 	configBtn.addEventListener("click",
 		function() {
-			var url =chrome.extension.getURL("opt/options.html") +"?s=cts";
+			const url = chrome.runtime.getURL("opt/options.html") +"?s=cts";
 			window.open(url, "_blank");
 		},
 	false);
@@ -302,46 +321,50 @@ CTS.favMainLoop =function(stb,tr,sp,fn,bgc,fgc){
 	}
 };
 
-CTS.run =function(){
-	var fn=config.searchnamedisplay;
-	var tld =config.searchlisttiled;
-	var sp =(tld && pos!="right")?0:config.intervaldistance;
-	var bgc =config.bgcolor;
-	var fgc =config.fgcolor;
+CTS.run = function () {
+  /*triggered more than once ?*/
+  if (document.getElementById("search2")) {
+    return;
+  }
 
-	/*triggered more than once ?*/
-	if (document.getElementById("search2")) return;
+  const fn = config.searchnamedisplay;
+  const tld = config.searchlisttiled;
+  const sp = tld && pos != "right" ? 0 : config.intervaldistance;
+  const bgc = config.bgcolor;
+  const fgc = config.fgcolor;
 
-	/*create bar*/
-	var bar =CTS.createBar(bgc);
+  /*create bar*/
+  const bar = CTS.createBar(bgc);
 
-	/*more pull down list*/
-	CTS.createPullmenu(bgc,fgc);
+  /*more pull down list*/
+  CTS.createPullmenu(bgc, fgc);
 
-	/*table layout*/
-	var tb =bar.appendChild(document.createElement("table"));
-	if (tld) {
-		if (pos=="left") tb.style.height ="100%";
-		if (pos=="top" || pos=="bottom") tb.style.width ="100%";
-	}
-	var tr =tb.appendChild(document.createElement("tr"));
-	var td =tr.appendChild(document.createElement("td"));;
+  /*table layout*/
+  var tb = bar.appendChild(document.createElement("table"));
+  if (tld) {
+    if (pos == "left") tb.style.height = "100%";
+    if (pos == "top" || pos == "bottom") tb.style.width = "100%";
+  }
+  var tr = tb.appendChild(document.createElement("tr"));
+  var td = tr.appendChild(document.createElement("td"));
 
-	/*config button*/
-	CTS.createConfigbtn(td);
+  /*config button*/
+  CTS.createConfigbtn(td);
 
-	/*auto hide and at right ?*/
-	var stb =(pos=="right" && config.autohide) ? CTS.rightHideTable(bar,tb) : tb;
+  /*auto hide and at right ?*/
+  var stb =
+    pos == "right" && config.autohide ? CTS.rightHideTable(bar, tb) : tb;
 
-	/*fill search engines*/
-	CTS.favMainLoop(stb,tr,sp,fn,bgc,fgc);
+  /*fill search engines*/
+  CTS.favMainLoop(stb, tr, sp, fn, bgc, fgc);
 
-	/*more search*/
-	if (pos =="left" || pos =="right") tr =stb.appendChild(document.createElement("tr"));
-	CTS.createMoreSearch(tr,sp,fn);
+  /*more search*/
+  if (pos == "left" || pos == "right")
+    tr = stb.appendChild(document.createElement("tr"));
+  CTS.createMoreSearch(tr, sp, fn);
 
-	/*now display the search2 bar*/
-	bar.style.display ="block";
+  /*now display the search2 bar*/
+  bar.style.display = "block";
 };
 
 CTS.createMoreSearch =function(tr,sp,fn){
@@ -586,105 +609,111 @@ CTS.makeMore =function(kw) {
 	return t;
 };
 
-CTS.runUrlChange =function(){
-	var bar =document.getElementById("search2");
-	if(!bar) CTS.main();
-	else {
-		var kw =keywords;
-		keywords =null;
-		CTS.getKeywords(document.location.hash.slice(1).replace(/\+/g, " "), septr);
-		if (!keywords) CTS.getKeywords(document.location.search.slice(1).replace(/\+/g, " "), septr);
-		if (!keywords) {
-			keywords =kw;
-			return;
-		}
-		//console.log("kw: " +keywords);
-		keywords =(septr=="/")?decodeURIComponent(keywords).replace(/\%25(26|2B|2d|2E)/g, "%$1"):decodeURIComponent(keywords);
-	}
+CTS.runUrlChange = function () {
+  const bar = document.getElementById("search2");
+  if (!bar) {
+    CTS.main();
+  } else {
+    const kw = keywords;
+    keywords = null;
+    CTS.getKeywords(document.location.hash.slice(1).replace(/\+/g, " "), septr);
+    if (!keywords)
+      CTS.getKeywords(
+        document.location.search.slice(1).replace(/\+/g, " "),
+        septr
+      );
+    if (!keywords) {
+      keywords = kw;
+      return;
+    }
+    keywords =
+      septr == "/"
+        ? decodeURIComponent(keywords).replace(/\%25(26|2B|2d|2E)/g, "%$1")
+        : decodeURIComponent(keywords);
+  }
 };
 
-CTS.runNotUTF =function(){
-	var kwdiv =document.getElementById("search2kwdiv");
-	keywords =kwdiv.innerText;
-	kwdiv.parentNode.removeChild(kwdiv);
-	CTS.run();
+CTS.runNotUTF = function () {
+  const kwdiv = document.getElementById("search2kwdiv");
+  keywords = kwdiv.innerText;
+  kwdiv.parentNode.removeChild(kwdiv);
+  CTS.run();
 };
 
-CTS.runLsnr =function(){
-	if (config.cmenu) {
-		document.oncontextmenu =function(){
-			console.log("search2initcm");
-			chrome.runtime.sendMessage({action: "search2initcm"});
-		};
-	}
+CTS.runLsnr = function () {
+  if (config.cmenu) {
+    document.oncontextmenu = function () {
+      chrome.runtime.sendMessage({ action: "search2initcm" });
+    };
+  }
 
-	chrome.runtime.onMessage.addListener(
-	  function(request, sender, sendResponse) {
-	    if (request.action == "search2popmore") {
-				CTS.setFavrect();
-				CTS.initI18n();
-				CTS.popMore();
-	    }
-	    else{
-	      sendResponse({});
-	    }
-
-	});
-
+  chrome.runtime.onMessage.addListener(function (
+    request,
+    sender,
+    sendResponse
+  ) {
+    if (request.action == "search2popmore") {
+      CTS.setFavrect();
+      CTS.initI18n();
+      CTS.popMore();
+    } else {
+      sendResponse({});
+    }
+  });
 };
 
-CTS.main =function() {
-	if (!COM.chromeCompatible()) return;
+CTS.main = function () {
+  if (!COM.chromeCompatible()) {
+    return;
+  }
 
-	chrome.storage.local.get(
-		function(storages){
-			config =storages.search2_config;
-			favtypes =storages.search2_favtypes;
-			favlist =storages.search2_favlist;
-			iconurls =storages.search2_iconurls;
-			icondatas =storages.search2_icondatas;
-			nohslist =storages.search2_nohslist;
+  chrome.storage.local.get(function (storages) {
+    config = storages.search2_config || IDATA.search2_config;
+    favtypes = storages.search2_favtypes || IDATA.search2_favtypes;
+    favlist = storages.search2_favlist || IDATA.search2_favlist;
+    iconurls = storages.search2_iconurls || IDATA.search2_iconurls;
+    icondatas = storages.search2_icondatas || IDATA.search2_icondatas;
+    nohslist = storages.search2_nohslist || IDATA.search2_nohslist;
 
-			if(!config) config =IDATA.search2_config;
-			if(!favtypes) favtypes =IDATA.search2_favtypes;
-			if(!favlist) favlist =IDATA.search2_favlist;
-			if(!iconurls) iconurls =IDATA.search2_iconurls;
-			if(!icondatas) icondatas =IDATA.search2_icondatas;
-			if(!nohslist) nohslist =IDATA.search2_nohslist;
+    pos = config.searchposition.toLowerCase();
 
-			pos =config.searchposition.toLowerCase();
+    CTS.runLsnr();
+    CTS.init();
+    if (!keywords) {
+      return;
+    }
 
-			CTS.runLsnr();
-			CTS.init();
-			if (!keywords) return;
+    CTS.initI18n();
+    CTS.tunePos();
+    CTS.setFavrect();
 
-			CTS.initI18n();
-			CTS.tunePos();
-			CTS.setFavrect();
-
-			CTS.ready(CTS.start);
-		}
-	);
+    CTS.ready(CTS.start);
+  });
 };
 
-CTS.loadCss =function(e, f, id, cb) {
-	var css =document.getElementById(id);
-	if(!css) {
-		css =document.createElement("link");
-		css.id=id;
-		css.type ="text/css";
-		css.rel ="stylesheet";
-		css.charset ="utf8";
-		css.href = chrome.extension.getURL(f);
-		e.appendChild(css);
-		if(cb) css.onload= cb;
-	}
+CTS.loadCss = function (e, f, id, cb) {
+  let css = document.getElementById(id);
+  if (!css) {
+    css = document.createElement("link");
+    css.id = id;
+    css.type = "text/css";
+    css.rel = "stylesheet";
+    css.charset = "utf8";
+    css.href = chrome.runtime.getURL(f);
+    e.appendChild(css);
+    if (cb) {
+      css.onload = cb;
+    }
+  }
 };
 
-CTS.tunePos =function(){
-	if ((pos!="left" && pos!="right" && pos!="top" && pos!="bottom")
-		|| (pos=="right" && (stype==2 || stype==5)))
-	pos ="left";
+CTS.tunePos = function () {
+  if (
+    (pos != "left" && pos != "right" && pos != "top" && pos != "bottom") ||
+    (pos == "right" && (stype == 2 || stype == 5))
+  ) {
+    pos = "left";
+  }
 };
 
 CTS.getKeywords =function(hashSearch, septr){
@@ -719,8 +748,9 @@ CTS.clickAslink =function(){
 		kw =(config.searchselected && stxt!="")? stxt : (keywords?keywords:"");
 		nw =config.newwindow;
 	}
-	if(!enc) CTS.openURL(host,url,encodeURIComponent(kw),urltf,nw);
-	else {
+	if (!enc) {
+		CTS.openURL(host,url,encodeURIComponent(kw),urltf,nw);
+	} else {
 		chrome.runtime.sendMessage(
 			{action:"search2encodekw", enc:enc, kw:kw},
 			function(response) {CTS.openURL(host,url,response.enckw,urltf,nw)}
