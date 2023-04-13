@@ -644,7 +644,7 @@ HTML.initClickEvent =function(){
 	var colorpane_close =document.getElementById("colorpane_close");
 
 	resetbtn.onclick =HTML.resetOption;
-	importbtn.onclick =HTML.importOption;
+	HTML.importOption();
 	exportbtn.onclick =HTML.exportOption;
 	savebtn.onclick =HTML.saveOption;
 	cancelbtn.onclick =HTML.cancelOption;
@@ -766,9 +766,11 @@ HTML.saveOption =function(){
 		}
 	);
 
-	if (!config.cmenu) chrome.contextMenus.removeAll();
-	else chrome.extension.sendMessage({action: "search2createcm"});
-
+	if (!config.cmenu) {
+		chrome.contextMenus.removeAll();
+	} else {
+		chrome.extension.sendMessage({action: "search2createcm"});
+	}
 	HTML.showTip(i18n.__op_tip_save_success);
 };
 
@@ -915,68 +917,66 @@ HTML.showMiniTip =function(e, msg, sec) {
 	evt =setTimeout("minitip.style.display ='none';minitiptxt.innerText='';clearTimeout(evt);", (sec?sec:2000));
 };
 
-HTML.exportOption =function(){
-	if(document.getElementById("search_att").getAttribute("locked")) {
-		HTML.showTip(i18n.__op_tip_notallow);
-		return;
-	}
-	chrome.storage.local.get(
-		function(storages){
-			if(!storages.search2_config) storages =IDATA;
-			else if(!storages.search2_favtypes) {
-				IDATA.search2_config =storages.search2_config;
-				storages =IDATA;
-			}
-			UTIL.fileSaveAs(UTIL.option2str(storages,""),"search2-config.bak");
-		}
-	)
+HTML.exportOption = function () {
+  if (document.getElementById("search_att").getAttribute("locked")) {
+    HTML.showTip(i18n.__op_tip_notallow);
+    return;
+  }
+  chrome.storage.local.get(function (storages) {
+    if (!storages.search2_config) {
+      storages = IDATA;
+    } else if (!storages.search2_favtypes) {
+      IDATA.search2_config = storages.search2_config;
+      storages = IDATA;
+    }
+    UTIL.textSave2File(UTIL.option2jsonstr(storages), "search2-config.bak", "Backup Search2 Config", ".bak");
+  });
 };
 
-HTML.importOption =function(){
-	var file =document.getElementById("importfile");
-	file.onchange =function(){
-		var tscript =document.body.appendChild(document.createElement("script"));
-		var url =URL.createObjectURL(file.files[0]);
-		tscript.src =url;
-		tscript.onload =function(){
-			var need_reload =false;
-			if(typeof BAKDATA =="undefined") alert(i18n.__op_import_failed);
-			else if(typeof BAKDATA.search2_config =="undefined" || typeof BAKDATA.search2_favtypes =="undefined"
-							|| typeof BAKDATA.search2_favlist =="undefined" || typeof BAKDATA.search2_iconurls =="undefined"
-							|| typeof BAKDATA.search2_icondatas =="undefined" || typeof BAKDATA.search2_nohslist =="undefined"
-							) alert(i18n.__op_import_failed);
-			else{
-				chrome.storage.local.remove(
-					[
-						"search2_config",
-						"search2_favtypes",
-						"search2_favlist",
-						"search2_iconurls",
-						"search2_icondatas",
-						"search2_nohslist"
-					]
-				);
-				chrome.storage.local.set(
-					{
-						search2_config : BAKDATA.search2_config,
-						search2_favtypes : BAKDATA.search2_favtypes,
-						search2_favlist : BAKDATA.search2_favlist,
-						search2_iconurls : BAKDATA.search2_iconurls,
-						search2_icondatas : BAKDATA.search2_icondatas,
-						search2_nohslist : BAKDATA.search2_nohslist
-					}
-				);
-				need_reload =true;
-				alert(i18n.__op_import_success);
-			}
-			if(!need_reload) return;
-			file.value ="";
-			URL.revokeObjectURL(url);
-			document.body.removeChild(tscript);
-			if(need_reload) document.location.reload();
-		};
-	};
-	file.click();
+// 导入配置
+HTML.importOption = function () {
+  const importFile = document.getElementById("__op_import");
+  let fileHandle;
+  importFile.addEventListener('click', async() => {
+    [fileHandle] = await window.showOpenFilePicker();
+    const file = await fileHandle.getFile();
+    const contents = await file.text();
+    const BAKDATA = JSON.parse(contents);
+    let needReload = false;
+    if (
+      typeof BAKDATA == "undefined" ||
+      typeof BAKDATA.search2_config == "undefined" ||
+      typeof BAKDATA.search2_favtypes == "undefined" ||
+      typeof BAKDATA.search2_favlist == "undefined" ||
+      typeof BAKDATA.search2_iconurls == "undefined" ||
+      typeof BAKDATA.search2_icondatas == "undefined" ||
+      typeof BAKDATA.search2_nohslist == "undefined"
+    ) {
+      alert(i18n.__op_import_failed);
+    } else {
+      chrome.storage.local.remove([
+        "search2_config",
+        "search2_favtypes",
+        "search2_favlist",
+        "search2_iconurls",
+        "search2_icondatas",
+        "search2_nohslist",
+      ]);
+      chrome.storage.local.set({
+        search2_config: BAKDATA.search2_config,
+        search2_favtypes: BAKDATA.search2_favtypes,
+        search2_favlist: BAKDATA.search2_favlist,
+        search2_iconurls: BAKDATA.search2_iconurls,
+        search2_icondatas: BAKDATA.search2_icondatas,
+        search2_nohslist: BAKDATA.search2_nohslist,
+      });
+      needReload = true;
+      alert(i18n.__op_import_success);
+    }
+    if (needReload) {
+	  document.location.reload();
+	}
+  });
 };
 
 HTML.initColorPane =function(){

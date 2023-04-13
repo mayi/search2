@@ -28,15 +28,15 @@ UTIL.searchListComperator =function(json1, json2){
 };
 
 UTIL.validateURL =function(url) {
-	var strRegex = "^((https|http)?://)"  
+	var strRegex = "^((https|http)?://)"
 	+ "(([0-9]{1,3}\.){3}[0-9]{1,3}" + "|" + "([0-9a-z_!~*'()-]+\.)*"/*ip | www*/
 	+ "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." /*2th domain*/
 	+ "[a-z]{2,6})" /*1th domain*/
 	+ "(:[0-9]{1,4})?" /*port*/
 	+"((/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
-	var re=new RegExp(strRegex,"i");  
-	if (re.test(url)) return true;  
-	else return false;  
+	var re=new RegExp(strRegex,"i");
+	if (re.test(url)) return true;
+	else return false;
 };
 
 UTIL.getFavicon =function(img) {
@@ -54,7 +54,7 @@ UTIL.getFavicon2 =function(hostname,url) {
 	var cv =document.createElement("canvas");
 	img.src =url;
 	var txt =document.getElementById("txt");
-	
+
 	img.onload =function() {
 		cv.width =img.offsetWidth;
 		cv.height =img.offsetHeight;
@@ -118,7 +118,7 @@ UTIL.base64decode =function(str){
 	        c1=base64DecodeChars[str.charCodeAt(i++)&0xff];
 	    }while(i<len&&c1==-1);
 	    if(c1==-1) break;
-	
+
 	    /* c2 */
 	    do{
 	        c2=base64DecodeChars[str.charCodeAt(i++)&0xff];
@@ -190,6 +190,16 @@ UTIL.option2str =function(storages,br){
 	return str;
 };
 
+UTIL.option2jsonstr = function (storages) {
+  let json = {};
+  for (o in storages) {
+    if (/^search2_\w+/.test(o)) {
+      json[o] = storages[o];
+    }
+  }
+  return JSON.stringify(json);
+};
+
 UTIL.fileSaveAs=function(blob,filename){
   var url = URL.createObjectURL(new Blob([blob], {type:'application/octet-stream'}));
   var bloba = document.createElement('a');
@@ -199,4 +209,23 @@ UTIL.fileSaveAs=function(blob,filename){
   e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
   bloba.dispatchEvent(e);
   URL.revokeObjectURL(url);
-} 
+}
+
+
+UTIL.textSave2File = async function(contents, filename, description, suffix) {
+  const options = {
+    suggestedName: filename,
+    types: [
+      {
+        description: description,
+        accept: {
+          'text/plain': [suffix],
+        },
+      },
+    ],
+  };
+  const fileHandle = await window.showSaveFilePicker(options);
+  const writable = await fileHandle.createWritable();
+  await writable.write(contents);
+  await writable.close();
+}
