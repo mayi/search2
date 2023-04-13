@@ -878,12 +878,15 @@ HTML.googleIco =function() {
 };
 
 HTML.showTip =function(msg, sec) {
-	var tip =document.getElementById("tip");
+	const tip =document.getElementById("tip");
 	tip.innerText =msg;
 	tip.style.display ="block";
 	tip.style.marginLeft =(tip.parentNode.getBoundingClientRect().width -tip.getBoundingClientRect().width) /2 +"px";
-	evt =setTimeout("tip.style.display ='none';tip.innerText='';clearTimeout(evt);", (sec?sec:2000));
-
+	const evt = setTimeout(() => {
+    tip.style.display ='none';
+    tip.innerText='';
+    clearTimeout(evt);
+  }, (sec ? sec : 2000));
 };
 
 HTML.showMiniTip =function(e, msg, sec) {
@@ -914,7 +917,11 @@ HTML.showMiniTip =function(e, msg, sec) {
 	tip.style.top =y +5 +"px";
 	tiptxt.innerText =msg;
 	tip.style.display ="block";
-	evt =setTimeout("minitip.style.display ='none';minitiptxt.innerText='';clearTimeout(evt);", (sec?sec:2000));
+  const evt = setTimeout(() => {
+    minitip.style.display ='none';
+    minitiptxt.innerText='';
+    clearTimeout(evt);
+  }, (sec ? sec : 2000));
 };
 
 HTML.exportOption = function () {
