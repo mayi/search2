@@ -896,7 +896,6 @@ HTML.showTip =function(msg, sec) {
 };
 
 HTML.showMiniTip =function(e, msg, sec) {
-	if(typeof evt !="undefined") clearTimeout(evt);
 	var tip =document.getElementById("minitip");
 	var tiptxt =document.getElementById("minitiptxt");
 	var x,y;
