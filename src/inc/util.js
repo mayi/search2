@@ -15,7 +15,7 @@
  *-------------------------------------------------------------------------
  */
 
-var UTIL ={};
+const UTIL ={};
 
 UTIL.searchListComperator =function(json1, json2){
 	var result;
@@ -229,3 +229,5 @@ UTIL.textSave2File = async function(contents, filename, description, suffix) {
   await writable.write(contents);
   await writable.close();
 }
+
+export {UTIL};

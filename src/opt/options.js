@@ -14,13 +14,14 @@
  *
  *-------------------------------------------------------------------------
  */
+import { IDATA } from '/opt/init-data.js';
+import { UTIL } from '/inc/util.js';
 
-
-var HTML={};
-var i18n ={};
-var SDATA ={};
-var mnw, mac;
-var iconurls, icondatas, iconloaded;
+const HTML = {};
+const i18n = {};
+const SDATA = {};
+let mnw, mac, cm;
+let iconurls, icondatas, iconloaded;
 
 SDATA.enclist =[
 	"gbk","gb18030","big5","big5-hkscs","utf-16le","shift-jis","euc-jp","iso-2022-jp","euc-kr","iso-2022-kr","macintosh","koi8-r","koi8-u",
@@ -151,40 +152,37 @@ HTML.initEncList =function() {
 	}
 };
 
-HTML.initPageData =function(){
-	chrome.storage.local.get(
-		function(storages){
-			var config =storages.search2_config;
-			var favtypes =storages.search2_favtypes;
-			var favlist =storages.search2_favlist;
-			iconurls =storages.search2_iconurls;
-			icondatas =storages.search2_icondatas;
+HTML.initPageData = function () {
+  chrome.storage.local.get(function (storages) {
+    var config = storages.search2_config;
+    var favtypes = storages.search2_favtypes;
+    var favlist = storages.search2_favlist;
+    iconurls = storages.search2_iconurls;
+    icondatas = storages.search2_icondatas;
 
-			if(!config) config =IDATA.search2_config;
-			if(!favtypes) favtypes =IDATA.search2_favtypes;
-			if(!favlist) favlist =IDATA.search2_favlist;
-			if(!iconurls) iconurls =IDATA.search2_iconurls;
-			if(!icondatas) icondatas =IDATA.search2_icondatas;
+    if (!config) config = IDATA.search2_config;
+    if (!favtypes) favtypes = IDATA.search2_favtypes;
+    if (!favlist) favlist = IDATA.search2_favlist;
+    if (!iconurls) iconurls = IDATA.search2_iconurls;
+    if (!icondatas) icondatas = IDATA.search2_icondatas;
 
-			mnw =config.morenewwindow;
-			mac =config.moreautoclose;
-			cm =config.cmenu;
-			favlist.sort(UTIL.searchListComperator);
+    mnw = config.morenewwindow;
+    mac = config.moreautoclose;
+    cm = config.cmenu;
+    favlist.sort(UTIL.searchListComperator);
 
-			HTML.initIcon();
-			HTML.initConfig(config);
+    HTML.initIcon();
+    HTML.initConfig(config);
 
-			HTML.injectSearchTab(favtypes);
+    HTML.injectSearchTab(favtypes);
 
-			for(i=0; i<favlist.length; i++){
-				HTML.injectSearchList(favlist[i]);
-				//UTIL.getFavicon(favlist[i].url1, favlist[i].icon);
-			}
+    for (const element of favlist) {
+      HTML.injectSearchList(element);
+    }
 
-			//if (iconflush) chrome.storage.local.set({search2_icondatas : icondatas});
-			document.getElementById("search_category_tab").firstChild.onmousedown();
-		}
-	);
+    //if (iconflush) chrome.storage.local.set({search2_icondatas : icondatas});
+    document.getElementById("search_category_tab").firstChild.onmousedown();
+  });
 };
 
 HTML.injectSearchTab =function(favtypes) {
@@ -249,7 +247,7 @@ HTML.injectSearchTab =function(favtypes) {
 		tabcnt++;
 	};
 
-	for (tp in favtypes) {
+	for (let tp in favtypes) {
 		addtab(tp, favtypes[tp]);
 		tabcnt++;
 	}
@@ -328,7 +326,9 @@ HTML.injectSearchList =function(json){
 	li.appendChild(addcm);
 	li.appendChild(span);
 	ul.appendChild(li);
-	for(var node in span.children) span.children[node].className ="searchListOp";
+	for (let node of span.children) {
+    node.className ="searchListOp";
+  }
 
 	inputName.onblur =function(){this.style.border ="0";this.disabled ="disabled";};
 	inputHost.onblur =function(){this.style.border ="0";this.disabled ="disabled";};
@@ -863,8 +863,8 @@ HTML.cancelOp =function() {
 	if (addsearch.innerHTML !=i18n.__op_search_add)
 	{
 		addsearch.innerHTML =i18n.__op_search_add;
-		addsearch.style.backgroundColor ="#277DA1";
-		addsearch.className = "icofont-ui-add";
+		addsearch.style.color ="#FFA500";
+		addsearch.style.backgroundColor ="";
 	}
 	HTML.searchAttEditable("c");
 
@@ -992,40 +992,65 @@ HTML.importOption = function () {
   });
 };
 
-HTML.initColorPane =function(){
-	var ColorHex=new Array('00','33','66','99','CC','FF');
-	var SpColorHex=new Array('FF0000','00FF00','0000FF','FFFF00','00FFFF','FF00FF');
-	var current=null;
-	var colorTable='<table border="0" cellspacing="0" cellpadding="0" '
-		+'style="border:1px #000000 solid;border-bottom:none;border-collapse:collapse;width:274px;" bordercolor="000000">'
-		+'<tr height=20>'
-		//+'<td><input disabled="true" type="input" id="vcolor" style="boder:0;background-color:transparent;outline:none"/></td>'
-		+'<td colspan=6 bgcolor=#ffffff style="font:12px tahoma;padding-left:2px;">'
-		+'<span id="colorpane_close" style="float:right;padding-right:3px;cursor:pointer;">×关闭</span>'
-		+'</td>'+
-		'</table>';
-	colorTable +='<table id="colortable" border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="000000" style="cursor:pointer;">';
-	for (i=0;i<2;i++){
-	  for (j=0;j<6;j++){
-	    colorTable=colorTable+'<tr height=12>';
-	    colorTable=colorTable+'<td width="12" style="background:#000000">';
-	    if (i==0){
-	      colorTable=colorTable+'<td width="12" style="cursor:pointer;background:#'+ColorHex[j]+ColorHex[j]+ColorHex[j]+'">';
-	    }else{
-	      colorTable=colorTable+'<td width="12" style="cursor:pointer;background:#'+SpColorHex[j]+'">';
-	    }
-	    colorTable=colorTable+'<td width="12" style="background:#000000">';
-	    for (k=0;k<3;k++){
-        for (l=0;l<6;l++){
-          colorTable=colorTable+'<td width="12" style="cursor:pointer;background:#'+ColorHex[k+i*3]+ColorHex[l]+ColorHex[j]+'">';
+HTML.initColorPane = function () {
+  var ColorHex = new Array("00", "33", "66", "99", "CC", "FF");
+  var SpColorHex = new Array(
+    "FF0000",
+    "00FF00",
+    "0000FF",
+    "FFFF00",
+    "00FFFF",
+    "FF00FF"
+  );
+  var current = null;
+  var colorTable =
+    '<table border="0" cellspacing="0" cellpadding="0" ' +
+    'style="border:1px #000000 solid;border-bottom:none;border-collapse:collapse;width:274px;" bordercolor="000000">' +
+    "<tr height=20>" +
+    //+'<td><input disabled="true" type="input" id="vcolor" style="boder:0;background-color:transparent;outline:none"/></td>'
+    '<td colspan=6 bgcolor=#ffffff style="font:12px tahoma;padding-left:2px;">' +
+    '<span id="colorpane_close" style="float:right;padding-right:3px;cursor:pointer;">×关闭</span>' +
+    "</td>" +
+    "</table>";
+  colorTable +=
+    '<table id="colortable" border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="000000" style="cursor:pointer;">';
+  for (let i = 0; i < 2; i++) {
+    for (let j = 0; j < 6; j++) {
+      colorTable = colorTable + "<tr height=12>";
+      colorTable = colorTable + '<td width="12" style="background:#000000">';
+      if (i == 0) {
+        colorTable =
+          colorTable +
+          '<td width="12" style="cursor:pointer;background:#' +
+          ColorHex[j] +
+          ColorHex[j] +
+          ColorHex[j] +
+          '">';
+      } else {
+        colorTable =
+          colorTable +
+          '<td width="12" style="cursor:pointer;background:#' +
+          SpColorHex[j] +
+          '">';
+      }
+      colorTable = colorTable + '<td width="12" style="background:#000000">';
+      for (let k = 0; k < 3; k++) {
+        for (let l = 0; l < 6; l++) {
+          colorTable =
+            colorTable +
+            '<td width="12" style="cursor:pointer;background:#' +
+            ColorHex[k + i * 3] +
+            ColorHex[l] +
+            ColorHex[j] +
+            '">';
         }
-	    }
-	  }
-	}
-	colorTable +='</table>';
-	var colorpane =document.getElementById("colorpane");
-	colorpane.style.display ="none";
-	colorpane.innerHTML =colorTable;
+      }
+    }
+  }
+  colorTable += "</table>";
+  var colorpane = document.getElementById("colorpane");
+  colorpane.style.display = "none";
+  colorpane.innerHTML = colorTable;
 };
 
 HTML.showColorPane =function(e){

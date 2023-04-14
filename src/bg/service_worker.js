@@ -16,8 +16,7 @@
  *
  *-------------------------------------------------------------------------
  */
-
-import "/opt/option-data.js";
+import { IDATA } from "/opt/init-data.js";
 
 const EVPG = {};
 let favlist;

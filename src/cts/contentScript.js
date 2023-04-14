@@ -14,13 +14,15 @@
  *
  *-------------------------------------------------------------------------
  */
-
-var CTS ={}, i18n ={};
-var favnum ={}, favrect ={};
-var hashSearch, septr;
-var keywords, enc, enckeywords;
-var favindex, pos, stype, prkw, urltf;
-var whmargin, msovered =0;
+const CTS = {},
+  i18n = {};
+let favnum = {},
+  favrect = {};
+let hashSearch, septr;
+let keywords, enc, enckeywords;
+let favindex, pos, stype, prkw, urltf;
+let whmargin,
+  msovered = 0;
 
 CTS.initI18n =function(){
 	i18n.chrome_nls =chrome.i18n.getMessage("@@ui_locale");
@@ -73,7 +75,6 @@ CTS.init = function () {
   if (!prkw) {
     return;
   }
-
   /*action for keywords*/
   if (nohslist.containOf(hostname)) {
     septr = "/";
@@ -668,14 +669,13 @@ CTS.main = function () {
   if (!COM.chromeCompatible()) {
     return;
   }
-
   chrome.storage.local.get(function (storages) {
-    config = storages.search2_config || IDATA.search2_config;
-    favtypes = storages.search2_favtypes || IDATA.search2_favtypes;
-    favlist = storages.search2_favlist || IDATA.search2_favlist;
-    iconurls = storages.search2_iconurls || IDATA.search2_iconurls;
-    icondatas = storages.search2_icondatas || IDATA.search2_icondatas;
-    nohslist = storages.search2_nohslist || IDATA.search2_nohslist;
+    config = storages.search2_config;
+    favtypes = storages.search2_favtypes;
+    favlist = storages.search2_favlist;
+    iconurls = storages.search2_iconurls;
+    icondatas = storages.search2_icondatas;
+    nohslist = storages.search2_nohslist;
 
     pos = config.searchposition.toLowerCase();
 
