@@ -87,7 +87,7 @@ CTS.init = function () {
   } else {
     septr = "&";
   }
-  console.log("urltf=" + urltf + " prkw=" + prkw + " septr=" + septr + " kws=" + keywords + " hs=" + hashSearch);
+  // console.log("urltf=" + urltf + " prkw=" + prkw + " septr=" + septr + " kws=" + keywords + " hs=" + hashSearch);
   /*location hash | search*/
   if (!keywords) {
     hashSearch = document.location.search.slice(1);
@@ -737,12 +737,10 @@ CTS.getKeywords =function(hashSearch, septr){
     } else if (hashSearch.indexOf("so.iqiyi.com") >= 0) {
       keywords = hashSearch.split(prkw)[1].split("?")[0];
     } else {
-      const arr = hashSearch.split(prkw);
-      if (arr.length > 1) {
-        keywords = arr[1].split("/")[1];
-      } else {
-        keywords = hashSearch.substring(prkw.length);
+      if (prkw.endsWith("/")) {
+        prkw = prkw.substring(0, prkw.length - 1);
       }
+      keywords = hashSearch.split(prkw)[1].split("/")[1];
     }
   }
 };
