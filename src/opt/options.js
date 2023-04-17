@@ -22,6 +22,7 @@ const i18n = {};
 const SDATA = {};
 let mnw, mac, cm;
 let iconurls, icondatas, iconloaded;
+let colorpane_target;
 
 SDATA.enclist =[
 	"gbk","gb18030","big5","big5-hkscs","utf-16le","shift-jis","euc-jp","iso-2022-jp","euc-kr","iso-2022-kr","macintosh","koi8-r","koi8-u",
@@ -1047,58 +1048,64 @@ HTML.initColorPane = function () {
     }
   }
   colorTable += "</table>";
-  var colorpane = document.getElementById("colorpane");
+  const colorpane = document.getElementById("colorpane");
   colorpane.style.display = "none";
   colorpane.innerHTML = colorTable;
 };
 
-HTML.showColorPane =function(e){
-	var colorpane =document.getElementById("colorpane");
-	if(colorpane.style.display !="none") return;
-	colorpane_target =e;
-	var x,y;
-	var rect =e.getBoundingClientRect();
-	if (rect) {
-		x =rect.left;
-		y =rect.top +rect.height;
-	}
-	else {
-		x = e.offsetLeft;
-		y = e.offsetTop;
-		var current = e.offsetParent;
-		while (current !== null) {
-			x += current.offsetLeft;
-			y += current.offsetTop;
-			current = current.offsetParent;
-		}
-		y +=e.offsetHeight;
-	}
-	colorpane.style.left =x +"px";
-	colorpane.style.top =y +2 +"px";
-	colorpane.style.display ="block";
-	colorpane.focus();
+HTML.showColorPane = function (e) {
+  const colorpane = document.getElementById("colorpane");
+  if (colorpane.style.display != "none") {
+    return;
+  }
+  colorpane_target = e;
+  let x, y;
+  let rect = e.getBoundingClientRect();
+  if (rect) {
+    x = rect.left;
+    y = rect.top + rect.height;
+  } else {
+    x = e.offsetLeft;
+    y = e.offsetTop;
+    let current = e.offsetParent;
+    while (current !== null) {
+      x += current.offsetLeft;
+      y += current.offsetTop;
+      current = current.offsetParent;
+    }
+    y += e.offsetHeight;
+  }
+  colorpane.style.left = x + "px";
+  colorpane.style.top = y + 2 + "px";
+  colorpane.style.display = "block";
+  colorpane.focus();
 };
 
-HTML.closeColorPane =function(){
-	document.getElementById("colorpane").style.display="none";
+HTML.closeColorPane = function () {
+  document.getElementById("colorpane").style.display = "none";
 };
 
-HTML.changeColor =function(color){
-	colorpane_target.style.background =color;
-	document.getElementById(colorpane_target.getAttribute("input")).value=color.colorHex();
+HTML.changeColor = function (color) {
+  colorpane_target.style.background = color;
+  document.getElementById(colorpane_target.getAttribute("input")).value =
+    color.colorHex();
 };
 
-HTML.colorInputOnDblck =function(e){
-	e.setAttribute("lastvalue",e.value.toUpperCase());
-	e.removeAttribute("readonly");
+HTML.colorInputOnDblck = function (e) {
+  e.setAttribute("lastvalue", e.value.toUpperCase());
+  e.removeAttribute("readonly");
 };
 
-HTML.colorInputOnblur =function(e){
-	e.value =e.value.isColorHex() ? e.value.toUpperCase() : e.getAttribute("lastvalue");
-	e.setAttribute("readonly","true");
-	document.getElementById(e.getAttribute("div")).style.background=e.value;
+HTML.colorInputOnblur = function (e) {
+  e.value = e.value.isColorHex()
+    ? e.value.toUpperCase()
+    : e.getAttribute("lastvalue");
+  e.setAttribute("readonly", "true");
+  document.getElementById(e.getAttribute("div")).style.background = e.value;
 };
 
-HTML.getInputColor =function(e){
-	return e.value.isColorHex() ? e.value.toUpperCase() : e.getAttribute("lastvalue");
+HTML.getInputColor = function (e) {
+  return e.value.isColorHex()
+    ? e.value.toUpperCase()
+    : e.getAttribute("lastvalue");
 };

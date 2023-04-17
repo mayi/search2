@@ -47,5 +47,5 @@
   "options_page": "opt/options.html",
   "permissions": ["storage", "contextMenus"],
   "host_permissions": ["http://*/*", "https://*/*"],
-  "version": "1.1.12"
+  "version": "1.2.0"
 }
