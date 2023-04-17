@@ -212,7 +212,7 @@ CTS.createPullmenu =function(bgc,fgc) {
 	document.documentElement.insertBefore(pulldowndiv,document.head);
 	var ul =pulldowndiv.appendChild(document.createElement("ul"));
 	if(pos=="left" || pos =="right") ul.style.width ="60px";
-	for(var t in favtypes) {
+	for(let t in favtypes) {
 		if(t ==stype) continue;
 		var li =ul.appendChild(document.createElement("li"));
 		var a =li.appendChild(document.createElement("a"));
@@ -433,7 +433,7 @@ CTS.pullMore =function() {
 	}
 	/*position:second menu list*/
 	var uls =pdiv.getElementsByTagName("ul");
-	for(var i=0;i<uls.length;i++)
+	for(let i=0;i<uls.length;i++)
 		if(uls[i].id.indexOf("pulldown_category")!=-1) {
 			if(pos =="top") {
 				uls[i].style.top ="18px";
@@ -591,9 +591,9 @@ CTS.makeMore =function(kw) {
 	tbd.id ="search2_more_morelist";
 	var trs =[];
 	//tr
-	for(tp in favtypes) trs[tp] =tbd.appendChild(document.createElement("tr"));
+	for(let tp in favtypes) trs[tp] =tbd.appendChild(document.createElement("tr"));
 	var searchItem;
-	for(var i =0; i<favlist.length; i++){
+	for(let i =0; i<favlist.length; i++){
 		if(!favlist[i].on || favlist[i].url.indexOf("%s")==-1) continue;
 		td =trs[favlist[i].type].appendChild(document.createElement("td"));
 		searchItem = td.appendChild(document.createElement("a"));
@@ -796,7 +796,7 @@ CTS.removeOverlay =function(){
 CTS.setFavrect =function() {
 	var rectw =recth =0;
 	favnum ={};
-	for(var i =0; i<favlist.length; i++){
+	for(let i =0; i<favlist.length; i++){
 		if(favlist[i].on ==1 && favlist[i].url.indexOf("%s")!=-1) favnum[favlist[i].type] =favnum[favlist[i].type] ? favnum[favlist[i].type] +1 : 1;
 	}
 	/*calculate lines and columns*/

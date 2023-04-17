@@ -17,61 +17,65 @@
 
 const UTIL ={};
 
-UTIL.searchListComperator =function(json1, json2){
-	var result;
-	var type1 =json1.type;
-	var type2 =json2.type;
-	var sno1 =json1.sno;
-	var sno2 =json2.sno;
-	(type1 !=type2)?(result =(type1-type2)) : (result =(sno1-sno2));
-	return result;
+UTIL.searchListComperator = function (json1, json2) {
+  let result;
+  const type1 = json1.type;
+  const type2 = json2.type;
+  const sno1 = json1.sno;
+  const sno2 = json2.sno;
+  type1 != type2 ? (result = type1 - type2) : (result = sno1 - sno2);
+  return result;
 };
 
-UTIL.validateURL =function(url) {
-	var strRegex = "^((https|http)?://)"
-	+ "(([0-9]{1,3}\.){3}[0-9]{1,3}" + "|" + "([0-9a-z_!~*'()-]+\.)*"/*ip | www*/
-	+ "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." /*2th domain*/
-	+ "[a-z]{2,6})" /*1th domain*/
-	+ "(:[0-9]{1,4})?" /*port*/
-	+"((/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
-	var re=new RegExp(strRegex,"i");
-	if (re.test(url)) return true;
-	else return false;
+UTIL.validateURL = function (url) {
+  const strRegex =
+    "^((https|http)?://)" +
+    "(([0-9]{1,3}.){3}[0-9]{1,3}" +
+    "|" +
+    "([0-9a-z_!~*'()-]+.)*" /*ip | www*/ +
+    "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]." /*2th domain*/ +
+    "[a-z]{2,6})" /*1th domain*/ +
+    "(:[0-9]{1,4})?" /*port*/ +
+    "((/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+  const re = new RegExp(strRegex, "i");
+  return re.test(url);
 };
 
-UTIL.getFavicon =function(img) {
-	var cv =document.createElement("canvas");
-	cv.width =img.offsetWidth;
-	cv.height =img.offsetHeight;
-	var ctx =cv.getContext("2d");
-	ctx.drawImage(img,0,0);
-	/*console.log(img.offsetWidth +"," +img.offsetHeight);*/
-	return cv.toDataURL("image/x-icon");
+UTIL.getFavicon = function (img) {
+  const cv = document.createElement("canvas");
+  cv.width = img.offsetWidth;
+  cv.height = img.offsetHeight;
+  const ctx = cv.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  /*console.log(img.offsetWidth +"," +img.offsetHeight);*/
+  return cv.toDataURL("image/x-icon");
 };
 
-UTIL.getFavicon2 =function(hostname,url) {
-	var img =document.getElementById("foricon").appendChild(document.createElement("img"));
-	var cv =document.createElement("canvas");
-	img.src =url;
-	var txt =document.getElementById("txt");
+UTIL.getFavicon2 = function (hostname, url) {
+  const img = document
+    .getElementById("foricon")
+    .appendChild(document.createElement("img"));
+  const cv = document.createElement("canvas");
+  img.src = url;
+  const txt = document.getElementById("txt");
 
-	img.onload =function() {
-		cv.width =img.offsetWidth;
-		cv.height =img.offsetHeight;
-		var ctx =cv.getContext("2d");
-		ctx.drawImage(img,0,0);
-		/*txt.innerHTML =txt.innerHTML +"," +hostname.replace(/\./g, "_") +" : '" +cv.toDataURL("image/x-icon").toString() +"'<br>";*/
-		console.log(hostname +": " +img.offsetWidth +"," +img.offsetHeight);
-		console.log(cv.toDataURL("image/x-icon").toString());
-		this.parentNode.removeChild(this);
-	}
+  img.onload = function () {
+    cv.width = img.offsetWidth;
+    cv.height = img.offsetHeight;
+    const ctx = cv.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    /*txt.innerHTML =txt.innerHTML +"," +hostname.replace(/\./g, "_") +" : '" +cv.toDataURL("image/x-icon").toString() +"'<br>";*/
+    console.log(hostname + ": " + img.offsetWidth + "," + img.offsetHeight);
+    console.log(cv.toDataURL("image/x-icon").toString());
+    this.parentNode.removeChild(this);
+  };
 };
 
-UTIL.onlyNumInput =function(e, minnum, maxnum) {
-	var n =e.value.replace(/[^0-9]/g, '');
-	n =(n<minnum)?minnum:n;
-	n =(n>maxnum)?maxnum:n;
-	e.value =n;
+UTIL.onlyNumInput = function (e, minnum, maxnum) {
+  let n = e.value.replace(/[^0-9]/g, "");
+  n = n < minnum ? minnum : n;
+  n = n > maxnum ? maxnum : n;
+  e.value = n;
 };
 
 
@@ -153,13 +157,13 @@ UTIL.json2str =function(o, br){
 	var str ="";
 	if(UTIL.isJson(o)){
 		str +="{" +br;
-		for(var oo in o){
+		for(let oo in o){
 			var ov =o[oo];
 			oo =/^\d+$/.test(oo) ? oo : "'" +oo +"'";
 			if(UTIL.isJson(ov)) str +=oo +":" +UTIL.json2str(ov, br);
 			else if(ov instanceof Array) {
 				str +=oo + ":[" +br;
-				for(var i=0;i<ov.length;i++) str +=UTIL.json2str(ov[i], br);
+				for(let i=0;i<ov.length;i++) str +=UTIL.json2str(ov[i], br);
 				str +="]," +br;
 			}
 			else {
@@ -172,7 +176,7 @@ UTIL.json2str =function(o, br){
 	}
 	else if(o instanceof Array) {
 		str +="[" +br;
-		for(var i=0;i<o.length;i++) str +=UTIL.json2str(o[i], br);
+		for(let i=0;i<o.length;i++) str +=UTIL.json2str(o[i], br);
 		str +="];" +br;
 	}
 	else str +="'" +o + "'," +br;
@@ -192,7 +196,7 @@ UTIL.option2str =function(storages,br){
 
 UTIL.option2jsonstr = function (storages) {
   let json = {};
-  for (o in storages) {
+  for (let o in storages) {
     if (/^search2_\w+/.test(o)) {
       json[o] = storages[o];
     }
@@ -200,12 +204,12 @@ UTIL.option2jsonstr = function (storages) {
   return JSON.stringify(json);
 };
 
-UTIL.fileSaveAs=function(blob,filename){
-  var url = URL.createObjectURL(new Blob([blob], {type:'application/octet-stream'}));
-  var bloba = document.createElement('a');
+UTIL.fileSaveAs = function(blob, filename) {
+  const url = URL.createObjectURL(new Blob([blob], {type:'application/octet-stream'}));
+  const bloba = document.createElement('a');
   bloba.href = url;
   bloba.download = filename;
-  var e = document.createEvent('MouseEvents');
+  const e = document.createEvent('MouseEvents');
   e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
   bloba.dispatchEvent(e);
   URL.revokeObjectURL(url);

@@ -291,7 +291,7 @@ HTML.injectSearchList =function(json){
 	var op_down =document.createElement("img");
 	var op_up =document.createElement("img");
 
-	for(var name in json) li.setAttribute(name, json[name]);
+	for(let name in json) li.setAttribute(name, json[name]);
 	var iconurl =iconurls[json.icon];
 	var icondata =icondatas[json.icon];
 	li.setAttribute("iconurl",iconurl);
@@ -358,7 +358,7 @@ HTML.searchTabSelected =function(){
 	}
 
 	var searchListItems =document.getElementById("search_list").childNodes;
-	for(var k=0; k<searchListItems.length; k++){
+	for(let k=0; k<searchListItems.length; k++){
 		var searchItem =searchListItems[k];
 		searchItem.id==target?(searchItem.style.setProperty("display","block")):(searchItem.style.setProperty("display","none"));
 	}
@@ -453,7 +453,7 @@ HTML.searchListRm =function(){
 	curLi.parentNode.removeChild(curLi);
 
 	var used, lists =document.getElementById("search_list").getElementsByTagName("li");
-	for(var i=0; i<lists.length; i++) {
+	for(let i=0; i<lists.length; i++) {
 		if(lists[i].getAttribute("icon") ==icon) {
 			used =true;
 			break;
@@ -469,7 +469,6 @@ HTML.searchListEdit =function(){
 		this.id ="current_edit";
 		this.innerHTML =i18n.__op_search_confirm;
 		this.style.color ="red";
-		this.style.backgroundColor ="#4C4C4C";
 		HTML.searchAttEditable("y");
 	}
 	else {
@@ -494,54 +493,62 @@ HTML.searchListAdd =function(){
 	}
 };
 
-HTML.searchListConfirm =function(type, e) {
-	var att_url =document.getElementById("att_url").value;
-	var att_name=document.getElementById("att_name").value;
-	var att_icon =document.getElementById("att_icon").value;
-	var att_prkw =document.getElementById("att_prkw").value;
-	var att_enc=document.getElementById("att_enc").value;
-	var att_tf =document.getElementById("att_tf").value;
-	var pathkw =document.getElementById("pathkw").checked;
-	//validate
-	if ((att_url.indexOf("%s")==-1 && att_url.indexOf("%p")==-1) || !UTIL.validateURL(att_url)) {
-		HTML.showTip(i18n.__op_tip_fom_url);
-		return;
-	}
-	if (!att_name || !att_name.trim()) {
-		HTML.showTip(i18n.__op_tip_fom_name);
-		return;
-	}
-	if (!UTIL.validateURL(att_icon)) {
-		HTML.showTip(i18n.__op_tip_fom_icon);
-		return;
-	}
-	if (!att_prkw || !att_prkw.trim() || att_url.indexOf(att_prkw)==-1 || (!pathkw && att_prkw.substr(-1)!="=")) {
-		HTML.showTip(i18n.__op_tip_fom_prkw);
-		return;
-	}
-	if (pathkw && att_prkw.substr(-1)=="=") {
-		HTML.showTip(i18n.__op_tip_fom_pathkw);
-		return;
-	}
+HTML.searchListConfirm = function (type, e) {
+  const att_url = document.getElementById("att_url").value;
+  const att_name = document.getElementById("att_name").value;
+  const att_icon = document.getElementById("att_icon").value;
+  const att_prkw = document.getElementById("att_prkw").value;
+  const att_enc = document.getElementById("att_enc").value;
+  const att_tf = document.getElementById("att_tf").value;
+  const pathkw = document.getElementById("pathkw").checked;
+  //validate
+  if (
+    (att_url.indexOf("%s") == -1 && att_url.indexOf("%p") == -1) ||
+    !UTIL.validateURL(att_url)
+  ) {
+    HTML.showTip(i18n.__op_tip_fom_url);
+    return;
+  }
+  if (!att_name || !att_name.trim()) {
+    HTML.showTip(i18n.__op_tip_fom_name);
+    return;
+  }
+  if (!UTIL.validateURL(att_icon)) {
+    HTML.showTip(i18n.__op_tip_fom_icon);
+    return;
+  }
+  if (
+    !att_prkw ||
+    !att_prkw.trim() ||
+    att_url.indexOf(att_prkw) == -1 ||
+    (!pathkw && att_prkw.substr(-1) != "=")
+  ) {
+    HTML.showTip(i18n.__op_tip_fom_prkw);
+    return;
+  }
+  if (pathkw && att_prkw.substr(-1) == "=") {
+    HTML.showTip(i18n.__op_tip_fom_pathkw);
+    return;
+  }
 
-	//build json data
-	var json ={};
-	json.on =1;
-	json.type =parseInt(search_att.getAttribute("ctype"));
-	json.name =att_name;
-	json.prkw =att_prkw;
-	json.urltf =att_tf;
-	json.url =att_url;
-	json.enc =att_enc;
-	json.host =att_url.split("/")[2];
-	json.icon =json.host.replace(/\./g, "_");
+  //build json data
+  const json = {};
+  json.on = 1;
+  json.type = parseInt(search_att.getAttribute("ctype"));
+  json.name = att_name;
+  json.prkw = att_prkw;
+  json.urltf = att_tf;
+  json.url = att_url;
+  json.enc = att_enc;
+  json.host = att_url.split("/")[2];
+  json.icon = json.host.replace(/\./g, "_");
 
-	var foricon =document.getElementById("foricon");
-	var img =foricon.appendChild(document.createElement("img"));
-	json.iconurl =iconurls[json.icon] =img.src =att_icon;
+  const foricon = document.getElementById("foricon");
+  const img = foricon.appendChild(document.createElement("img"));
+  json.iconurl = iconurls[json.icon] = img.src = att_icon;
 
-	/*if get icon timeout*/
-	iconloaded =false;
+  /*if get icon timeout*/
+  iconloaded = false;
   const icoevt = setTimeout(() => {
     if (!iconloaded) {
       HTML.showTip(i18n.__op_tip_fom_icon_timeout, 4000);
@@ -550,31 +557,30 @@ HTML.searchListConfirm =function(type, e) {
     clearTimeout(icoevt);
   }, 5000);
 
-	img.onload =function() {
-		iconloaded =true;
-		var li, icondata =icondatas[json.icon] =UTIL.getFavicon(img);
-		if (type=="edit") {
-			li =e.parentNode.parentNode;
-			li.childNodes[0].src =icondata;
-			for (var name in json) li.setAttribute(name, json[name]);
-			li.getElementsByTagName("input")[0].value =json.name;
-			li.getElementsByTagName("input")[1].value =json.host;
-			e.id ="";
-			e.innerHTML =i18n.__op_search_edit;
-			e.style.color ="#388F73";
-
-		}
-		else if (type=="add") {
-			li =HTML.injectSearchList(json);
-			e.innerHTML =i18n.__op_search_add;
-			e.style.color ="white";
-		}
-		e.className = "icofont-ui-add";
-		e.style.backgroundColor ="#277DA1";
-		HTML.searchAttEditable("n");
-		if (type=="edit") li.click();
-		foricon.innerHTML ="";
-	}
+  img.onload = function () {
+    iconloaded = true;
+    let li,
+      icondata = (icondatas[json.icon] = UTIL.getFavicon(img));
+    if (type == "edit") {
+      li = e.parentNode.parentNode;
+      li.childNodes[0].src = icondata;
+      for (let name in json) {
+        li.setAttribute(name, json[name]);
+      }
+      li.getElementsByTagName("input")[0].value = json.name;
+      li.getElementsByTagName("input")[1].value = json.host;
+      e.id = "";
+      e.innerHTML = i18n.__op_search_edit;
+      e.style.color = "#388F73";
+    } else if (type == "add") {
+      li = HTML.injectSearchList(json);
+      e.innerHTML = i18n.__op_search_add;
+      e.style.color = "white";
+    }
+    HTML.searchAttEditable("n");
+    if (type == "edit") li.click();
+    foricon.innerHTML = "";
+  };
 };
 
 HTML.searchAttEditable =function(flag) {
@@ -584,7 +590,7 @@ HTML.searchAttEditable =function(flag) {
 	switch (flag) {
 	case "y" :
 		search_att.setAttribute("locked","locked");
-		for(i =0; i<form.length; i++) {
+		for(let i =0; i<form.length; i++) {
 			form[i].removeAttribute("disabled");
 			//form[i].style.border ="1px solid #31B2B8";
 		}
@@ -594,13 +600,13 @@ HTML.searchAttEditable =function(flag) {
 		break;
 	case "n" :
 		search_att.removeAttribute("locked");
-		for(i =0; i<form.length; i++)	form[i].disabled ="disabled";
+		for(let i =0; i<form.length; i++)	form[i].disabled ="disabled";
 		att_enc.disabled ="disabled";
 		att_enc.style.color =att_enc.style.background ="#EBEBE4";
 		break;
 	case "c" :
 		search_att.removeAttribute("locked");
-		for(i =0; i<form.length; i++)	{
+		for(let i =0; i<form.length; i++)	{
 			form[i].disabled ="disabled";
 			if (form[i].type =="text") form[i].value ="";
 			if (form[i].type =="checkbox") form[i].checked =false;
@@ -684,7 +690,7 @@ HTML.initClickEvent =function(){
 	colorpane.onblur =colorpane_close.onclick =HTML.closeColorPane;
 
 	var colortable =document.getElementById('colortable').getElementsByTagName("td");
-	for(var i=0;i<colortable.length;i++) colortable[i].onclick =function(){HTML.changeColor(this.style.background)};
+	for(let i=0;i<colortable.length;i++) colortable[i].onclick =function(){HTML.changeColor(this.style.background)};
 };
 
 HTML.closeOption =function() {
@@ -733,7 +739,7 @@ HTML.saveOption =function(){
 	var searchTabUl =document.getElementById("search_category_tab");
 	var searchTabs =searchTabUl.getElementsByTagName("li");
 	var favtypes ={};
-	for(var i=0; i<searchTabs.length-1; i++) {
+	for(let i=0; i<searchTabs.length-1; i++) {
 		favtypes[parseInt(searchTabs[i].getAttribute("ctype"))] =searchTabs[i].firstChild.value;
 	}
 
@@ -741,11 +747,11 @@ HTML.saveOption =function(){
 	var searchList =searchListDiv.getElementsByTagName("li");
 	var favlist =[], nohslist =[];
 
-	for(var i=0; i<searchList.length; i++){
+	for(let i=0; i<searchList.length; i++){
 		var listItem =searchList[i];
 		var fields =listItem.attributes;
 		var json ={};
-		for(var k=0; k<fields.length; k++){
+		for(let k=0; k<fields.length; k++){
 			var key =fields[k].name;
 			var value =fields[k].value;
 			if (key=="on" || key=="type" || key=="cm" || key=="name" || key=="host" || key=="icon" || key=="enc" || key=="prkw" || key=="urltf" || key=="url")
